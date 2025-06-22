@@ -4,6 +4,8 @@ import com.project.banque.entities.AccountOperation;
 import com.project.banque.entities.SavingAccount;
 import com.project.banque.services.interf.AccountOperationService;
 import com.project.banque.services.interf.SavingAccountService;
+import com.project.banque.utils.ApiResponse;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,42 +19,73 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class SavingAccountController {
 
-    final SavingAccountService service;
-
-    final AccountOperationService operationService;
-
+    private final SavingAccountService service;
+    private final AccountOperationService operationService;
 
     @PostMapping
-    public ResponseEntity<SavingAccount> create(@RequestBody SavingAccount account) {
+    public ApiResponse<Object> create(@RequestBody SavingAccount account) {
+        try {
+            AccountOperation operation = new AccountOperation();
+            operation.setAmount(account.getBalance());
+            operation.setType(account.getType());
+            operation.setReference(UUID.randomUUID().toString());
+            operation.setBankAccount(account); // ou setSavingAccount(account) selon ta structure
 
-        AccountOperation operation = new AccountOperation();
-        operation.setAmount(account.getBalance());
-        operation.setType(account.getType());
-        operation.setReference(UUID.randomUUID().toString());
+            operationService.createAccountOperation(operation);
 
-        operationService.createAccountOperation(operation);
-
-        return ResponseEntity.ok(service.create(account));
+            SavingAccount created = service.create(account);
+            return ApiResponse.success(created, "Compte épargne créé avec succès");
+        } catch (Exception e) {
+            return ApiResponse.error(400, "Erreur lors de la création : " + e.getMessage());
+        }
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<SavingAccount> getById(@PathVariable Long id) {
-        return ResponseEntity.ok(service.getById(id));
+    public ApiResponse<Object> getById(@PathVariable Long id) {
+        try {
+            SavingAccount account = service.getById(id);
+            return ApiResponse.success(account, "Compte épargne récupéré avec succès");
+        } catch (EntityNotFoundException e) {
+            return ApiResponse.error(404, e.getMessage());
+        } catch (Exception e) {
+            return ApiResponse.error(500, "Erreur interne : " + e.getMessage());
+        }
     }
 
     @GetMapping
-    public ResponseEntity<List<SavingAccount>> getAll() {
-        return ResponseEntity.ok(service.getAll());
+    public ApiResponse<Object> getAll() {
+        try {
+            List<SavingAccount> accounts = service.getAll();
+            return ApiResponse.success(accounts, "Liste des comptes épargne récupérée avec succès");
+        } catch (Exception e) {
+            return ApiResponse.error(500, "Erreur interne : " + e.getMessage());
+        }
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<SavingAccount> update(@PathVariable Long id, @RequestBody SavingAccount account) {
-        return ResponseEntity.ok(service.update(id, account));
+    public ApiResponse<Object> update(@PathVariable Long id, @RequestBody SavingAccount account) {
+        try {
+            service.getById(id);
+            SavingAccount updated = service.update(id, account);
+            return ApiResponse.success(updated, "Compte épargne mis à jour avec succès");
+        } catch (EntityNotFoundException e) {
+            return ApiResponse.error(404, e.getMessage());
+        } catch (Exception e) {
+            return ApiResponse.error(500, "Erreur interne : " + e.getMessage());
+        }
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
-        service.delete(id);
-        return ResponseEntity.noContent().build();
+    public ApiResponse<Object> delete(@PathVariable Long id) {
+        try {
+            service.getById(id);
+
+            service.delete(id);
+            return ApiResponse.success(null, "Compte épargne supprimé avec succès");
+        } catch (EntityNotFoundException e) {
+            return ApiResponse.error(404, e.getMessage());
+        } catch (Exception e) {
+            return ApiResponse.error(500, "Erreur interne : " + e.getMessage());
+        }
     }
 }
