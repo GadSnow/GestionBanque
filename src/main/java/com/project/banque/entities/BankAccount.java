@@ -1,5 +1,6 @@
 package com.project.banque.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.project.banque.enums.AccountStatus;
 import com.project.banque.enums.AccountType;
 import jakarta.persistence.*;
