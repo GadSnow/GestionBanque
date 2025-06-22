@@ -25,6 +25,9 @@ public class Customer {
     private String nom;
 
     @Column
+    private String prenom;
+
+    @Column
     private Boolean btEnabled = true;
 
     @Column
