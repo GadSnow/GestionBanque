@@ -40,7 +40,11 @@ public class CurrentAccountServiceImpl implements CurrentAccountService {
         existing.setBalance(updatedAccount.getBalance());
         existing.setStatus(updatedAccount.getStatus());
         existing.setType(updatedAccount.getType());
-        // autres champs si besoin
+        existing.setAccountNumber(updatedAccount.getAccountNumber());
+        if (updatedAccount.getCustomer() != null) {
+            existing.setCustomer(updatedAccount.getCustomer());
+
+        }
         return repository.save(existing);
     }
 

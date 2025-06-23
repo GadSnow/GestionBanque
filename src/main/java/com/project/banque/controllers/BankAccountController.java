@@ -19,36 +19,36 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class BankAccountController {
 
-    private final CurrentAccountService service;
-    private final AccountOperationService operationService;
-    private final CustomerService customerService;
-
-
-    @GetMapping("/{id}")
-    public ApiResponse<Object> getById(@PathVariable Long id) {
-        try {
-            CurrentAccount account = service.getById(id);
-            return ApiResponse.success(account, "Compte courant récupéré avec succès");
-        } catch (EntityNotFoundException e) {
-            return ApiResponse.error(404, e.getMessage());
-        } catch (Exception e) {
-            return ApiResponse.error(500, "Erreur interne : " + e.getMessage());
-        }
-    }
-
-
-
-    @DeleteMapping("/{id}")
-    public ApiResponse<Object> delete(@PathVariable Long id) {
-        try {
-            service.getById(id);
-
-            service.delete(id);
-            return ApiResponse.success(null, "Compte courant supprimé avec succès");
-        } catch (EntityNotFoundException e) {
-            return ApiResponse.error(404, e.getMessage());
-        } catch (Exception e) {
-            return ApiResponse.error(500, "Erreur interne : " + e.getMessage());
-        }
-    }
+//    private final CurrentAccountService service;
+//    private final AccountOperationService operationService;
+//    private final CustomerService customerService;
+//
+//
+//    @GetMapping("/{id}")
+//    public ApiResponse<Object> getById(@PathVariable Long id) {
+//        try {
+//            CurrentAccount account = service.getById(id);
+//            return ApiResponse.success(account, "Compte courant récupéré avec succès");
+//        } catch (EntityNotFoundException e) {
+//            return ApiResponse.error(404, e.getMessage());
+//        } catch (Exception e) {
+//            return ApiResponse.error(500, "Erreur interne : " + e.getMessage());
+//        }
+//    }
+//
+//
+//
+//    @DeleteMapping("/{id}")
+//    public ApiResponse<Object> delete(@PathVariable Long id) {
+//        try {
+//            service.getById(id);
+//
+//            service.delete(id);
+//            return ApiResponse.success(null, "Compte courant supprimé avec succès");
+//        } catch (EntityNotFoundException e) {
+//            return ApiResponse.error(404, e.getMessage());
+//        } catch (Exception e) {
+//            return ApiResponse.error(500, "Erreur interne : " + e.getMessage());
+//        }
+//    }
 }

@@ -72,11 +72,12 @@ public class SavingAccountController {
     @PutMapping("/{id}")
     public ApiResponse<Object> update(@PathVariable Long id, @RequestBody SavingAccount account) {
         try {
+            if (account.getCustomer() != null) {
+                customerService.getById(account.getCustomer().getId());
+            }
             service.getById(id);
-            customerService.getById(account.getCustomer().getId());
 
             SavingAccount updated = service.update(id, account);
-            updated.setCustomer(account.getCustomer());
 
             return ApiResponse.success(updated, "Compte épargne mis à jour avec succès");
         } catch (EntityNotFoundException e) {

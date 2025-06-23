@@ -45,6 +45,6 @@ public abstract class BankAccount {
     @Column(nullable = false)
     private AccountType type;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     private Customer customer;
 }

@@ -74,10 +74,11 @@ public class CurrentAccountController {
     @PutMapping("/{id}")
     public ApiResponse<Object> update(@PathVariable Long id, @RequestBody CurrentAccount account) {
         try {
+            if (account.getCustomer() != null) {
+                customerService.getById(account.getCustomer().getId());
+            }
             service.getById(id);
-            customerService.getById(account.getCustomer().getId());
             CurrentAccount updated = service.update(id, account);
-            updated.setCustomer(account.getCustomer());
 
             return ApiResponse.success(updated, "Compte courant mis à jour avec succès");
         } catch (EntityNotFoundException e) {
