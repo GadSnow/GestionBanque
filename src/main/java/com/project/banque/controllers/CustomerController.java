@@ -5,13 +5,12 @@ import com.project.banque.services.interf.CustomerService;
 import com.project.banque.utils.ApiResponse;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController()
-@RequestMapping("/customer")
+@RequestMapping("/customers")
 @CrossOrigin(origins = "*")
 @RequiredArgsConstructor
 public class CustomerController {
@@ -22,7 +21,7 @@ public class CustomerController {
     public ApiResponse<Object> create(@RequestBody Customer customer) {
         try {
             Customer created = customerService.create(customer);
-            return ApiResponse.success(created, "Client créé avec succès");
+            return ApiResponse.success(created, "Enregistrement effectué avec succès");
         } catch (Exception e) {
             return ApiResponse.error(400, "Erreur lors de la création : " + e.getMessage());
         }

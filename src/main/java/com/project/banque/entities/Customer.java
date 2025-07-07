@@ -27,6 +27,10 @@ public class Customer {
     @Column
     private String prenom;
 
+
+    @Column(unique=true)
+    private String contact;
+
     @Column
     private Boolean btEnabled = true;
 
